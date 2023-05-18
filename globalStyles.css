@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  font-size: 14px;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  background-color: #f5f8fa;
+  font-family: "Roboto";
+  color: #384a5c;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+  color: #333;
+}
+
+input:checked {
+  background-color: #862583;
+}
+
+.container {
+  width: 1180px;
+  height: fit-content;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 1rem;
+  height: 47rem;
+}

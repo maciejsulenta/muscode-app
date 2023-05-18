@@ -1,0 +1,122 @@
+.modal {
+  position: fixed;
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  display: none;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.modal--open {
+  display: flex;
+}
+
+.modal__backdrop {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal__content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 43rem;
+  height: 100vh;
+  background-color: #fff;
+}
+
+.modal__title {
+  align-self: flex-start;
+  border-bottom: 4px solid #353e88;
+  width: 100%;
+  padding: 1.25rem 0.75rem;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.modal__image {
+  object-fit: contain;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(51, 51, 51, 1);
+  -moz-box-shadow: 0px 0px 15px -10px rgba(51, 51, 51, 1);
+  box-shadow: 0px 0px 15px -10px rgba(51, 51, 51, 1);
+  border-radius: 50%;
+  width: 15rem;
+  height: 15rem;
+  aspect-ratio: 1/1;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.modal-form__item {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.5rem;
+  border-bottom: 1px solid #b2b2b2;
+  padding: 0 0.3rem;
+}
+
+.modal-form__label {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #384a5c;
+}
+
+.modal-form__input {
+  border: none;
+  outline: none;
+  padding: 0.6rem 0 0.3rem 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #384a5c;
+}
+
+.buttons-wrap {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: auto;
+  border-top: 1px solid #b2b2b2;
+  width: 100%;
+  padding: 0.7rem;
+}
+
+.modal__button {
+  transition: all 0.15s ease;
+  border: 1px solid #b2b2b2;
+  outline: none;
+  width: 4.5rem;
+  height: 2rem;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #384a5c;
+}
+
+.modal__button:active {
+  border-color: #862583;
+  background-color: #862583;
+  color: #fff;
+}
+
+.modal__button--dark {
+  border: 1px solid #862583;
+  background-color: #862583;
+  color: #fff;
+}
+
+.modal__button--dark:active {
+  border-color: #b2b2b2;
+  background-color: #fff;
+  color: #384a5c;
+}
