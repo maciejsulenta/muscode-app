@@ -1,15 +1,20 @@
 class Modal extends HTMLElement {
+  get productTiles() {
+    return document.querySelector("product-tiles");
+  }
+
   static get observedAttributes() {
     return ["item"];
   }
-
+  productId = 0;
   attributeChangedCallback(productName, oldValue, newValue) {
     if (oldValue === newValue) {
       return;
     }
 
-    const { id, name, price, initialPrice, currency } =
-      JSON.parse(newValue);
+    const { id, name, price, initialPrice, currency } = JSON.parse(newValue);
+
+    this.productId = id;
 
     this.innerHTML = `
       <aside class="modal">
@@ -62,6 +67,7 @@ class Modal extends HTMLElement {
   `;
 
     this.handleModal();
+    this.handleUpdate();
   }
 
   init() {
@@ -80,6 +86,30 @@ class Modal extends HTMLElement {
       if (e.key === "Escape" && modal.classList.contains("modal--open")) {
         modal.classList.remove("modal--open");
       }
+    });
+  }
+
+  handleUpdate() {
+    const saveButton = document.querySelector(".modal__button--dark");
+
+    saveButton.addEventListener("click", (e) => {
+      const name = document.getElementById("name").value;
+      const price = document.getElementById("price").value;
+      const initialPrice = document.getElementById("price").value;
+      const currency = document.getElementById("currency").value;
+
+      const updatedProduct = {
+        id: this.productId,
+        name,
+        price,
+        initialPrice,
+        currency,
+      };
+
+      this.productTiles.setAttribute(
+        "updatedProd",
+        JSON.stringify(updatedProduct)
+      );
     });
   }
 }

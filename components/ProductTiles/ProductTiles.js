@@ -32,10 +32,55 @@ class ProductTiles extends HTMLElement {
         ? Math.floor(100 - (item.price / item.initialPrice) * 100)
         : "",
     }));
+
+    document
+      .querySelector("product-list")
+      .setAttribute("products", JSON.stringify(this.productTileData));
   }
 
   get modal() {
     return document.querySelector(".modal");
+  }
+
+  static get observedAttributes() {
+    return ["updatedProd"];
+  }
+
+  attributeChangedCallback(productName, oldValue, newValue) {
+    const updatedProduct = JSON.parse(newValue);
+
+    console.log(updatedProduct);
+
+    const oldProducts = this.productTileData.filter(
+      (product) => product.id !== updatedProduct.id
+    );
+
+    this.productTileData = [...oldProducts, updatedProduct];
+
+    //   this.innerHTML = `
+    //     ${this.productTileData
+    //       .map(
+    //         (product, index) => `
+    //           <div class="product-tile">
+    //           <h3 class="product-tile__text">${product.name}</h3>
+    //         ${
+    //           product.promotion &&
+    //           `<div class="product-tile__promotion">${product.promotion}%</div>`
+    //         }
+    //         <img class="product-tile__image" src="../assets/img${
+    //           index + 1
+    //         }.png" alt="${product.name}"/>
+    //        <p class="product-tile__price">${product.price} ${product.currency}</p>
+    //        ${
+    //          product.promotion &&
+    //          `<p class="product-tile__initial-price">${product.initialPrice} ${product.currency}</p>`
+    //        }
+    //      </div>`
+    //       )
+    //       .join("")}
+    //  `;
+
+    this.handleModal();
   }
 
   connectedCallback() {
@@ -73,10 +118,6 @@ class ProductTiles extends HTMLElement {
 
     tile.forEach((item, index) => {
       item.addEventListener("click", (e) => {
-        [...item.children]
-          .filter((item) => item.tagName !== "IMG")
-          .map((child) => console.log(child.textContent));
-
         modal.setAttribute("item", JSON.stringify(this.productTileData[index]));
 
         this.modal.classList.toggle("modal--open");
