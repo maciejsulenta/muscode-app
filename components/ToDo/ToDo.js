@@ -1,6 +1,10 @@
 class ToDo extends HTMLElement {
   todoItems = ["siema", "co tam", "elo"];
 
+  get todoListItems() {
+    return document.querySelectorAll(".todo-list__item input[type=checkbox]");
+  }
+
   connectedCallback() {
     this.innerHTML = `
       <div class="header">
@@ -17,33 +21,37 @@ class ToDo extends HTMLElement {
     `;
 
     this.onTodoItemAdd();
-    // this.onTodoItemCheck();
+    this.onTodoItemCheck();
   }
 
   onTodoItemAdd() {
-    const todoList = document.querySelector('todo-item');
+    const todoList = document.querySelector("todo-item");
     const todoAdd = document.querySelector(".todo-add");
     const todoAddInput = document.querySelector(".todo-add__input");
 
     todoAdd.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      if(todoAddInput.value !== "") {
+      if (todoAddInput.value !== "") {
         this.todoItems.push(todoAddInput.value);
       }
 
       todoList.setAttribute("items", this.todoItems);
       todoAddInput.value = "";
+
+      this.onTodoItemCheck();
     });
   }
 
-  // onTodoItemCheck() {
-  //   const todoListItem = document.querySelectorAll('.todo-list__item');
-   
-  //   todoListItem.forEach((item) => {
-  //     item.addEventListener('click', console.log('siema'))
-  //   })
-  // }
+  onTodoItemCheck() {
+    this.todoListItems.forEach((item) => {
+      item.addEventListener("click", () => {
+
+        this.counter++;
+        item.parentNode.classList.toggle("checked");
+      });
+    });
+  }
 }
 
 customElements.define("to-do", ToDo);
