@@ -17,41 +17,33 @@ class ToDo extends HTMLElement {
     `;
 
     this.onTodoItemAdd();
+    // this.onTodoItemCheck();
   }
 
   onTodoItemAdd() {
-    // const todoList = document.querySelector(".todo-list");
+    const todoList = document.querySelector('todo-item');
     const todoAdd = document.querySelector(".todo-add");
     const todoAddInput = document.querySelector(".todo-add__input");
 
     todoAdd.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      this.todoItems.push(todoAddInput.value);
-      // this.todoItems(this.todoItems.push(todoAddInput.value));
+      if(todoAddInput.value !== "") {
+        this.todoItems.push(todoAddInput.value);
+      }
 
-      console.log(this.todoItems);
-      // let todoListItem = document.createElement("li");
-
-      // todoListItem.className = "todo-list__item";
-
-      // todoList.append(todoListItem);
-
+      todoList.setAttribute("items", this.todoItems);
       todoAddInput.value = "";
     });
   }
+
+  // onTodoItemCheck() {
+  //   const todoListItem = document.querySelectorAll('.todo-list__item');
+   
+  //   todoListItem.forEach((item) => {
+  //     item.addEventListener('click', console.log('siema'))
+  //   })
+  // }
 }
 
 customElements.define("to-do", ToDo);
-
-// ${todoItems
-//   .map(
-//     (item, index) => `
-//     <li class="todo-list__item">
-//       <input type="checkbox" id="${index}">
-//       <label for="${index}">
-//         ${item}
-//       </label>
-//     </li>`
-//   )
-//   .join("")}
