@@ -1,6 +1,8 @@
 class ToDo extends HTMLElement {
   todoItems = ["siema", "co tam", "elo"];
 
+  counter = 0;
+
   get todoListItems() {
     return document.querySelectorAll(".todo-list__item input[type=checkbox]");
   }
@@ -9,7 +11,7 @@ class ToDo extends HTMLElement {
     this.innerHTML = `
       <div class="header">
         <h3 class="header__text">Lista todo</h3>
-        <h3 class="header__text">Wykonane: 0</h3>
+        <h3 class="header__text" id="counter">Wykonane: ${this.counter}</h3>
       </div>
 
       <todo-item items="${this.todoItems}"></todo-item>
@@ -43,12 +45,25 @@ class ToDo extends HTMLElement {
     });
   }
 
-  onTodoItemCheck() {
-    this.todoListItems.forEach((item) => {
-      item.addEventListener("click", () => {
+  // onTodoItemCheck() {
+  //   this.todoListItems.forEach((item) => {
+  //     item.addEventListener("click", () => {
+  //       item.parentNode.classList.toggle("checked");
+  //     });
+  //   });
+  // }
 
-        this.counter++;
-        item.parentNode.classList.toggle("checked");
+  onTodoItemCheck() {
+    const node = document.querySelector("#counter");
+    this.todoListItems.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        if (e.target.checked) {
+          this.counter++;
+        } else {
+          this.counter--;
+        }
+        // item.parentNode.classList.toggle("checked");
+        node.innerHTML = `Wykonano: ${this.counter}`;
       });
     });
   }

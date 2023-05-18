@@ -21,6 +21,11 @@ class ProductList extends HTMLElement {
             <td class="table__price">1000</td>
             <td>$</td>
           </tr>
+
+
+
+
+          
           <tr>
             <td class="table__id">1</td>
             <td class="table__name">iPad Pro 32GB</td>

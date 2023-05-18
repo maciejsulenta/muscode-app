@@ -1,33 +1,44 @@
 class Modal extends HTMLElement {
-  connectedCallback() {
+  static get observedAttributes() {
+    return ["item"];
+  }
+
+  attributeChangedCallback(productName, oldValue, newValue) {
+    if (oldValue === newValue) {
+      return;
+    }
+
+    const { id, name, price, initialPrice, currency } =
+      JSON.parse(newValue);
+
     this.innerHTML = `
-    <aside class="modal">
+      <aside class="modal">
       <div class="modal__backdrop"></div>
 
       <div class="modal__content">
-        <h3 class="modal__title">Edycja produktu: iPhone 6s Plus 16GB</h3>
-        <img class="modal__image" src="../../assets/img1.png" alt="iPhone 6s Plus 16GB"/>
+        <h3 class="modal__title">Edycja produktu: ${name}</h3>
+        <img class="modal__image" src="../../assets/img${id}.png" alt="${name}"/>
 
         <form class="modal-form">
           <div class="modal-form__item">
             <label class="modal-form__label" for="name">
               Nazwa produktu
             </label>
-            <input class="modal-form__input" id="name" type="text" value="iPhone 6s Plus 16GB">
+            <input class="modal-form__input" id="name" type="text" value="${name}">
           </div>
 
           <div class="modal-form__item">
             <label class="modal-form__label" for="initial-price">
               Cena
             </label>
-            <input class="modal-form__input" id="initial-price" type="number" value="1000">
+            <input class="modal-form__input" id="initial-price" type="number" value="${initialPrice}">
           </div>
 
           <div class="modal-form__item">
             <label class="modal-form__label" for="price">
               Promocyjna cena
             </label>
-            <input class="modal-form__input" id="price" type="number" value="649">
+            <input class="modal-form__input" id="price" type="number" value="${price}">
           </div>
 
           <div class="modal-form__item">
@@ -48,9 +59,13 @@ class Modal extends HTMLElement {
         </div>
       </div>
     </aside>
-`;
+  `;
 
     this.handleModal();
+  }
+
+  init() {
+    console.log(this.getAttribute("item"));
   }
 
   handleModal() {

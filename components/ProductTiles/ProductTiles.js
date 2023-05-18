@@ -1,46 +1,86 @@
 class ProductTiles extends HTMLElement {
+  productTileData = [
+    {
+      id: "1",
+      name: "iPhone 6s Plus 16GB",
+      price: "649",
+      initialPrice: "1000",
+      currency: "$",
+    },
+    {
+      id: "2",
+      name: "iPad Pro 32GB",
+      price: "600",
+      initialPrice: "800",
+      currency: "$",
+    },
+    {
+      id: "3",
+      name: "Macbook Pro",
+      price: "8000",
+      initialPrice: "",
+      currency: "PLN",
+    },
+  ];
+
+  constructor() {
+    super();
+
+    this.productTileData = this.productTileData.map((item) => ({
+      ...item,
+      promotion: item.initialPrice
+        ? Math.floor(100 - (item.price / item.initialPrice) * 100)
+        : "",
+    }));
+  }
+
   get modal() {
     return document.querySelector(".modal");
   }
-  // get tile() {
-  //   return document.getElementById("siema");
-  // }
 
   connectedCallback() {
     this.innerHTML = `
-      <div class="product-tile">
-        <h3 class="product-tile__text">iPhone 6s Plus 16GB</h3>
-        <div class="product-tile__promotion">-35%</div>
-        <img class="product-tile__image" src="../assets/img1.png" alt="iPhone 6s Plus"/>
-        <p class="product-tile__price">649 $</p>
-        <p class="product-tile__initial-price">1000 $</p>
-      </div>
-
-      <div class="product-tile">
-        <h3 class="product-tile__text">iPad Pro 32GB</h3>
-        <div class="product-tile__promotion">-25%</div>
-        <img class="product-tile__image" src="../assets/img2.png" alt="iPad Pro 32GB"/>
-        <p class="product-tile__price">600 $</p>
-        <p class="product-tile__initial-price">800 $</p>
-      </div>
-
-      <div class="product-tile" id="siema">
-        <h3 class="product-tile__text">MacBook Pro</h3>
-        <img class="product-tile__image" src="../assets/img3.png" alt="MacBook Pro"/>
-        <p class="product-tile__price">8000 PLN</p>
-        <p class="product-tile__initial-price"></p>
-      </div>
+     ${this.productTileData
+       .map(
+         (product, index) => `
+          <div class="product-tile">
+          <h3 class="product-tile__text">${product.name}</h3>
+          ${
+            product.promotion &&
+            `<div class="product-tile__promotion">${product.promotion}%</div>`
+          }
+          <img class="product-tile__image" src="../assets/img${
+            index + 1
+          }.png" alt="${product.name}"/>
+          <p class="product-tile__price">${product.price} ${
+           product.currency
+         }</p>
+          ${
+            product.promotion &&
+            `<p class="product-tile__initial-price">${product.initialPrice} ${product.currency}</p>`
+          }
+        </div>`
+       )
+       .join("")}
     `;
 
     this.handleModal();
   }
 
   handleModal() {
-    const tile = document.getElementById('siema');
+    const tile = document.querySelectorAll(".product-tile");
+    const modal = document.querySelector("modal-app");
 
-    tile.addEventListener("click", (e) => {
-      console.log(this.modal);
-      this.modal.classList.toggle("modal--open");
+    tile.forEach((item, index) => {
+      item.addEventListener("click", (e) => {
+        [...item.children]
+          .filter((item) => item.tagName !== "IMG")
+          .map((child) => console.log(child.textContent));
+
+        modal.setAttribute("item", JSON.stringify(this.productTileData[index]));
+
+        this.modal.classList.toggle("modal--open");
+      });
     });
   }
 }
