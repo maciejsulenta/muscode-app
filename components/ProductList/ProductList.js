@@ -7,6 +7,7 @@ class ProductList extends HTMLElement {
     if (oldValue === newValue) {
       return;
     }
+
     const productsList = JSON.parse(newValue);
 
     this.innerHTML = `

@@ -1,6 +1,5 @@
 class ToDo extends HTMLElement {
-  todoItems = ["siema", "co tam", "elo"];
-
+  todoItems = [];
   counter = 0;
 
   get todoListItems() {
@@ -14,7 +13,7 @@ class ToDo extends HTMLElement {
         <h3 class="header__text" id="counter">Wykonane: ${this.counter}</h3>
       </div>
 
-      <todo-item items="${this.todoItems}"></todo-item>
+      <todo-item></todo-item>
 
       <form class="todo-add">
         <span class="todo-add__icon">+</span>
@@ -35,34 +34,54 @@ class ToDo extends HTMLElement {
       e.preventDefault();
 
       if (todoAddInput.value !== "") {
-        this.todoItems.push(todoAddInput.value);
+        const todoLength = this.todoItems.length;
+
+        this.todoItems.push({
+          id: todoLength ? todoLength : 0,
+          name: todoAddInput.value,
+          checked: false,
+        });
       }
 
-      todoList.setAttribute("items", this.todoItems);
+      todoList.setAttribute("items", JSON.stringify(this.todoItems));
       todoAddInput.value = "";
 
       this.onTodoItemCheck();
     });
   }
-
-  // onTodoItemCheck() {
-  //   this.todoListItems.forEach((item) => {
-  //     item.addEventListener("click", () => {
-  //       item.parentNode.classList.toggle("checked");
-  //     });
-  //   });
-  // }
-
   onTodoItemCheck() {
     const node = document.querySelector("#counter");
+
+    this.todoItems.forEach((todoItem) => {
+      this.todoListItems.forEach((item) => {
+        if (todoItem.checked && todoItem.id === +item.id) {
+          item.setAttribute("checked", true);
+        }
+      });
+    });
+
     this.todoListItems.forEach((item) => {
       item.addEventListener("click", (e) => {
+        const clickedElement = this.todoItems.find(
+          (todo) => todo.id === +item.id
+        );
+
         if (e.target.checked) {
-          this.counter++;
+          clickedElement.checked = true;
         } else {
-          this.counter--;
+          clickedElement.checked = false;
         }
-        // item.parentNode.classList.toggle("checked");
+
+        const uncheckedElements = this.todoItems.filter(
+          (todo) => todo.id !== +item.id
+        );
+
+        const updatedList = [...uncheckedElements, clickedElement];
+
+        this.counter = updatedList.filter(
+          (item) => item.checked === true
+        ).length;
+
         node.innerHTML = `Wykonano: ${this.counter}`;
       });
     });

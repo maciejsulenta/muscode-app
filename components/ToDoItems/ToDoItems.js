@@ -1,5 +1,5 @@
 class ToDoItem extends HTMLElement {
-  todoItems = this.getAttribute("items").split(",");
+  todoItems = this.getAttribute("items");
 
   static get observedAttributes() {
     return ["items"];
@@ -10,7 +10,7 @@ class ToDoItem extends HTMLElement {
       return;
     }
 
-    this.todoItems = newValue.split(",");
+    this.todoItems = JSON.parse(newValue);
 
     this.innerHTML = `
       <ul class="todo-list">
@@ -20,7 +20,7 @@ class ToDoItem extends HTMLElement {
             <li class="todo-list__item">
               <input type="checkbox" id="${index}">
               <label for="${index}">
-                ${item}
+                ${item.name}
               </label>
             </li>`
           )

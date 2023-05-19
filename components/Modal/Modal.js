@@ -1,4 +1,6 @@
 class Modal extends HTMLElement {
+  productId = 0;
+
   get productTiles() {
     return document.querySelector("product-tiles");
   }
@@ -6,7 +8,7 @@ class Modal extends HTMLElement {
   static get observedAttributes() {
     return ["item"];
   }
-  productId = 0;
+
   attributeChangedCallback(productName, oldValue, newValue) {
     if (oldValue === newValue) {
       return;
@@ -15,13 +17,14 @@ class Modal extends HTMLElement {
     const { id, name, price, initialPrice, currency } = JSON.parse(newValue);
 
     this.productId = id;
+    this.currency = currency;
 
     this.innerHTML = `
       <aside class="modal">
-      <div class="modal__backdrop"></div>
+        <div class="modal__backdrop"></div>
 
-      <div class="modal__content">
-        <h3 class="modal__title">Edycja produktu: ${name}</h3>
+        <div class="modal__content">
+          <h3 class="modal__title">Edycja produktu: ${name}</h3>
         <img class="modal__image" src="../../assets/img${id}.png" alt="${name}"/>
 
         <form class="modal-form">
@@ -68,10 +71,17 @@ class Modal extends HTMLElement {
 
     this.handleModal();
     this.handleUpdate();
+    this.init();
   }
 
   init() {
-    console.log(this.getAttribute("item"));
+    const selectOptions = document.querySelectorAll("select option");
+
+    selectOptions.forEach((option) => {
+      if (option.textContent === this.currency) {
+        option.setAttribute("selected", true);
+      }
+    });
   }
 
   handleModal() {
@@ -91,11 +101,12 @@ class Modal extends HTMLElement {
 
   handleUpdate() {
     const saveButton = document.querySelector(".modal__button--dark");
+    const modal = document.querySelector(".modal");
 
     saveButton.addEventListener("click", (e) => {
       const name = document.getElementById("name").value;
       const price = document.getElementById("price").value;
-      const initialPrice = document.getElementById("price").value;
+      const initialPrice = document.getElementById("initial-price").value;
       const currency = document.getElementById("currency").value;
 
       const updatedProduct = {
@@ -104,12 +115,30 @@ class Modal extends HTMLElement {
         price,
         initialPrice,
         currency,
+        promotion: initialPrice
+          ? Math.floor(100 - (price / initialPrice) * 100)
+          : "",
       };
 
-      this.productTiles.setAttribute(
-        "updatedProd",
-        JSON.stringify(updatedProduct)
+      const products = JSON.parse(localStorage.getItem("products"));
+      const oldProducts = products.filter(
+        (product) => product.id !== this.productId
       );
+
+      const updatedProducts = [...oldProducts, updatedProduct].sort(
+        (a, b) => a.id - b.id
+      );
+
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+      document
+        .querySelector("product-list")
+        .setAttribute("products", JSON.stringify([...updatedProducts]));
+
+      document
+        .querySelector("product-tiles")
+        .setAttribute("products", JSON.stringify([...updatedProducts]));
+      modal.classList.remove("modal--open");
     });
   }
 }
