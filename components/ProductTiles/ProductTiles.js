@@ -1,6 +1,7 @@
 class ProductTiles extends HTMLElement {
   constructor() {
     super();
+
     this.productTileData = JSON.parse(this.getAttribute("products"));
 
     document

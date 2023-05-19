@@ -21,11 +21,11 @@ class ToDo extends HTMLElement {
       </form>
     `;
 
-    this.onTodoItemAdd();
-    this.onTodoItemCheck();
+    this.addItem();
+    this.checkItem();
   }
 
-  onTodoItemAdd() {
+  addItem() {
     const todoList = document.querySelector("todo-item");
     const todoAdd = document.querySelector(".todo-add");
     const todoAddInput = document.querySelector(".todo-add__input");
@@ -46,11 +46,12 @@ class ToDo extends HTMLElement {
       todoList.setAttribute("items", JSON.stringify(this.todoItems));
       todoAddInput.value = "";
 
-      this.onTodoItemCheck();
+      this.checkItem();
     });
   }
-  onTodoItemCheck() {
-    const node = document.querySelector("#counter");
+
+  checkItem() {
+    const counterNode = document.querySelector("#counter");
 
     this.todoItems.forEach((todoItem) => {
       this.todoListItems.forEach((item) => {
@@ -66,11 +67,7 @@ class ToDo extends HTMLElement {
           (todo) => todo.id === +item.id
         );
 
-        if (e.target.checked) {
-          clickedElement.checked = true;
-        } else {
-          clickedElement.checked = false;
-        }
+        clickedElement.checked = e.target.checked;
 
         const uncheckedElements = this.todoItems.filter(
           (todo) => todo.id !== +item.id
@@ -78,11 +75,8 @@ class ToDo extends HTMLElement {
 
         const updatedList = [...uncheckedElements, clickedElement];
 
-        this.counter = updatedList.filter(
-          (item) => item.checked === true
-        ).length;
-
-        node.innerHTML = `Wykonano: ${this.counter}`;
+        this.counter = updatedList.filter((item) => item.checked).length;
+        counterNode.innerHTML = `Wykonano: ${this.counter}`;
       });
     });
   }

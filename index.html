@@ -46,5 +46,41 @@
         <product-tiles></product-tiles>
       </div>
     </div>
+
+    <script>
+      const data = [
+        {
+          id: "1",
+          name: "iPhone 6s Plus 16GB",
+          price: "649",
+          initialPrice: "1000",
+          currency: "$",
+        },
+        {
+          id: "2",
+          name: "iPad Pro 32GB",
+          price: "600",
+          initialPrice: "800",
+          currency: "$",
+        },
+        {
+          id: "3",
+          name: "Macbook Pro",
+          price: "8000",
+          initialPrice: "",
+          currency: "PLN",
+        },
+      ].map((item) => ({
+        ...item,
+        promotion: item.initialPrice
+          ? Math.floor(100 - (item.price / item.initialPrice) * 100)
+          : "",
+      }));
+
+      localStorage.setItem("products", JSON.stringify(data));
+      document
+        .querySelector("product-tiles")
+        .setAttribute("products", JSON.stringify(data));
+    </script>
   </body>
 </html>

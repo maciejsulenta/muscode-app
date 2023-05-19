@@ -63,18 +63,18 @@ class Modal extends HTMLElement {
 
         <div class="buttons-wrap">
           <button class="modal__button modal__button--dark">Zapisz</button>
-          <button class="modal__button">Anuluj</button>
+          <button class="modal__button" id="cancel">Anuluj</button>
         </div>
       </div>
     </aside>
   `;
 
     this.handleModal();
-    this.handleUpdate();
-    this.init();
+    this.handleUpdateSelect();
+    this.handleUpdateProduct();
   }
 
-  init() {
+  handleUpdateSelect() {
     const selectOptions = document.querySelectorAll("select option");
 
     selectOptions.forEach((option) => {
@@ -99,45 +99,61 @@ class Modal extends HTMLElement {
     });
   }
 
-  handleUpdate() {
+  modifyProducts() {
+    const name = document.getElementById("name").value;
+    const price = document.getElementById("price").value;
+    const initialPrice = document.getElementById("initial-price").value;
+    const currency = document.getElementById("currency").value;
+
+    const selectedProduct = {
+      id: this.productId,
+      name,
+      price,
+      initialPrice,
+      currency,
+      promotion: initialPrice
+        ? Math.floor(100 - (price / initialPrice) * 100)
+        : "",
+    };
+
+    const products = JSON.parse(localStorage.getItem("products"));
+
+    const notSelectedProducts = products.filter(
+      (product) => product.id !== this.productId
+    );
+
+    const updatedProducts = [...notSelectedProducts, selectedProduct].sort(
+      (a, b) => a.id - b.id
+    );
+
+    return updatedProducts;
+  }
+
+  updateComponents(updatedProducts) {
+    document
+      .querySelector("product-list")
+      .setAttribute("products", JSON.stringify([...updatedProducts]));
+
+    document
+      .querySelector("product-tiles")
+      .setAttribute("products", JSON.stringify([...updatedProducts]));
+  }
+
+  handleUpdateProduct() {
     const saveButton = document.querySelector(".modal__button--dark");
+    const cancelButton = document.getElementById("cancel");
     const modal = document.querySelector(".modal");
 
-    saveButton.addEventListener("click", (e) => {
-      const name = document.getElementById("name").value;
-      const price = document.getElementById("price").value;
-      const initialPrice = document.getElementById("initial-price").value;
-      const currency = document.getElementById("currency").value;
+    cancelButton.addEventListener("click", () => {
+      modal.classList.remove("modal--open");
+    });
 
-      const updatedProduct = {
-        id: this.productId,
-        name,
-        price,
-        initialPrice,
-        currency,
-        promotion: initialPrice
-          ? Math.floor(100 - (price / initialPrice) * 100)
-          : "",
-      };
-
-      const products = JSON.parse(localStorage.getItem("products"));
-      const oldProducts = products.filter(
-        (product) => product.id !== this.productId
-      );
-
-      const updatedProducts = [...oldProducts, updatedProduct].sort(
-        (a, b) => a.id - b.id
-      );
+    saveButton.addEventListener("click", () => {
+      const updatedProducts = this.modifyProducts();
+      this.updateComponents(updatedProducts);
 
       localStorage.setItem("products", JSON.stringify(updatedProducts));
 
-      document
-        .querySelector("product-list")
-        .setAttribute("products", JSON.stringify([...updatedProducts]));
-
-      document
-        .querySelector("product-tiles")
-        .setAttribute("products", JSON.stringify([...updatedProducts]));
       modal.classList.remove("modal--open");
     });
   }
